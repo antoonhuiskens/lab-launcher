@@ -1,0 +1,22 @@
+#cloud-config
+users:
+ - default
+ - name: nginx
+   sudo: ALL=(ALL) NOPASSWD:ALL
+   shell: /bin/bash
+   ssh_authorized_keys:
+   - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDD9a54BVsiNmoNhjx/LqgahB1c4Rbd5eKx0+1Bm72FPiw+WzfTYMcecV4l43UYTBXBO/EfR3lWsDWq0M9eADSnh0zQFv6AayyQQjCEMhbQ6hRczX51aYn6sOhxd2881O2TM+R3d/mvVjtumj8o6s65pt6Gjhxrvo/W7oH0hgJZZWIgh4vLO8J0mAX1CUGIQvUpomJKqrOdgHhh2YiwjcTUUdNsnNsMPITtbuwcir3Xlaa4lXQHxKZh9ITfEoBEu+yCD+OzShInq6cd2uQRb6ulRgr0SU8qjYQ6GB6xAjINpebJZupYnu9U0gH51TV5vnl9EaCnWKCkw6MJIsvJpZqb antoon.huiskens@Antoonhuiskens-0397L.local
+packages:
+  - apt-transport-https
+  - curl
+  - python
+
+runcmd:
+ - "echo '[Resolve]\nDomains=antoonh.nginx' > /etc/systemd/resolved.conf && systemctl restart systemd-resolved.service"
+ - "iptables -t nat -I OUTPUT -p udp --dport 53 -d 192.168.64.1 -j DNAT --to-destination 192.168.64.1:5353"
+write_files:
+ - encoding: b64
+   content: IyEvYmluL2Jhc2gKCmlwdGFibGVzIC10IG5hdCAtSSBPVVRQVVQgLXAgdWRwIC0tZHBvcnQgNTMgLWQgMTkyLjE2OC42NC4xIC1qIEROQVQgLS10by1kZXN0aW5hdGlvbiAxOTIuMTY4LjY0LjE6NTM1MwoKZXhpdCAwCg==
+   owner: root:root
+   path: /etc/rc.local
+   permissions: 0755
